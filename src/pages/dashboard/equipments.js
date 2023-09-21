@@ -9,6 +9,8 @@ function Equipments() {
     const [isEditing, setIsEditing] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const [page, setPage] = useState(1);
+    const ITEMS_PER_PAGE = 4;
 
     useEffect(() => {
         async function fetchData() {
@@ -34,19 +36,18 @@ function Equipments() {
     };
 
     const handleDeleteEquipment = async (id) => {
-      try {
-          await EquipmentService.deleteEquipment(id);
-          setEquipments(equipments.filter(e => e.id !== id));
-      } catch (error) {
-          if (error.message && error.message.includes('ProtectedError')) {
-              alert('Erro ao deletar equipamento: O equipamento está sendo referenciado por outra tabela (por exemplo, Assistance) e não pode ser deletado.');
-          } else {
-              alert('Erro ao deletar equipamento.');
-          }
-      }
-  };
+        try {
+            await EquipmentService.deleteEquipment(id);
+            setEquipments(equipments.filter(e => e.id !== id));
+        } catch (error) {
+            if (error.message && error.message.includes('ProtectedError')) {
+                alert('Erro ao deletar equipamento: O equipamento está sendo referenciado por outra tabela (por exemplo, Assistance) e não pode ser deletado.');
+            } else {
+                alert('Erro ao deletar equipamento.');
+            }
+        }
+    };
   
-
     const handleEditEquipment = (equipment) => {
         setSelectedEquipment(equipment);
         setIsEditing(true);
@@ -64,6 +65,8 @@ function Equipments() {
         equipment.name.toLowerCase().includes(search.toLowerCase())
     );
 
+    const paginatedEquipments = filteredEquipments.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
     const equipmentCounts = equipments.reduce((acc, equipment) => {
         acc[equipment.brand] = (acc[equipment.brand] || 0) + 1;
         return acc;
@@ -75,7 +78,6 @@ function Equipments() {
         name: brand,
         value: equipmentCounts[brand]
     }));
-
 
     const uniqueBrands = [...new Set(equipments.map(equipment => equipment.brand))];
 
@@ -121,7 +123,7 @@ function Equipments() {
                     </div>
 
                     <ul>
-                        {filteredEquipments.map(equipment => (
+                        {paginatedEquipments.map(equipment => (
                             <li key={equipment.id}>
                                 {equipment.name} - {equipment.model} - {equipment.brand}
                                 <button onClick={() => handleEditEquipment(equipment)}>Editar</button>
@@ -131,7 +133,12 @@ function Equipments() {
                     </ul>
 
                     <div>
-                        <h2>Distribuição de Equipamentos por Localização</h2>
+                        <button onClick={() => setPage(prev => Math.max(prev - 1, 1))} disabled={page === 1}>Anterior</button>
+                        <button onClick={() => setPage(prev => prev + 1)} disabled={paginatedEquipments.length < ITEMS_PER_PAGE}>Próximo</button>
+                    </div>
+
+                    <div>
+                        <h2>Distribuição de Equipamentos por Marca</h2>
                         <PieChart width={400} height={400}>
                             <Pie dataKey="value" isAnimationActive={false} data={data} outerRadius={80} fill="#8884d8" label>
                                 {

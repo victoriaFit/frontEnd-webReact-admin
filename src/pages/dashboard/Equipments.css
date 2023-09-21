@@ -1,29 +1,46 @@
 .equipmentDashboard {
     padding: 20px;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f7f7;
+    min-height: 100vh;
+    color: #333;
+}
+
+.equipmentDashboard h1, .equipmentDashboard h2 {
+    border-bottom: 2px solid #007BFF;
+    padding-bottom: 10px;
 }
 
 .equipmentDashboard h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 32px;
+    margin-bottom: 40px;
+    color: #007BFF;
 }
 
-.equipmentDashboard input {
-    padding: 10px;
+.equipmentDashboard input, .equipmentDashboard select {
+    padding: 12px;
     margin: 10px 0;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px;
     width: 100%;
+    font-size: 14px;
+    transition: border 0.3s;
+}
+
+.equipmentDashboard input:focus, .equipmentDashboard select:focus {
+    border: 1px solid #007BFF;
+    outline: none;
 }
 
 .equipmentDashboard button {
-    padding: 10px 20px;
+    padding: 12px 25px;
     margin: 10px 5px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     background-color: #007BFF;
     color: white;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .equipmentDashboard button:hover {
@@ -36,24 +53,18 @@
 }
 
 .equipmentDashboard li {
-    padding: 10px;
+    padding: 15px;
     border: 1px solid #ccc;
     margin: 10px 0;
-    border-radius: 4px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .equipmentDashboard h2 {
-    font-size: 20px;
-    margin-top: 30px;
+    font-size: 24px;
+    margin-top: 40px;
     margin-bottom: 20px;
-}
-
-.equipmentDashboard select {
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -62,7 +73,7 @@
     }
 
     .equipmentDashboard h1, .equipmentDashboard h2 {
-        font-size: 18px;
+        font-size: 22px;
     }
 
     .equipmentDashboard input, .equipmentDashboard select, .equipmentDashboard button {
@@ -80,6 +91,7 @@
 
     .equipmentDashboard button {
         display: block;
-        margin: 5px auto;
+        width: 100%;
+        margin: 10px auto;
     }
 }
