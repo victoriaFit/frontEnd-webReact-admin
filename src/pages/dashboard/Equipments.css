@@ -1,97 +1,175 @@
-.equipmentDashboard {
-    padding: 20px;
-    font-family: 'Roboto', sans-serif;
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
     background-color: #f7f7f7;
-    min-height: 100vh;
     color: #333;
+    min-height: 100vh;
 }
 
-.equipmentDashboard h1, .equipmentDashboard h2 {
-    border-bottom: 2px solid #007BFF;
-    padding-bottom: 10px;
+.equipmentDashboard {
+    margin: 2rem 5rem;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.equipmentDashboard h1 {
+h1, h2, h3, p {
+    margin-bottom: 20px;
+}
+
+h1 {
     font-size: 32px;
     margin-bottom: 40px;
-    color: #007BFF;
+    color: #FB5F21;
+    text-align: center;
 }
 
-.equipmentDashboard input, .equipmentDashboard select {
+.inputField, .selectField {
     padding: 12px;
     margin: 10px 0;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 25px;
     width: 100%;
-    font-size: 14px;
+    font-size: 16px;
     transition: border 0.3s;
+    color: #333;
+    box-sizing: border-box;
 }
 
-.equipmentDashboard input:focus, .equipmentDashboard select:focus {
-    border: 1px solid #007BFF;
+.inputField::placeholder, .selectField::placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.inputField:focus, .selectField:focus {
+    border-color: #FB5F21;
     outline: none;
 }
 
-.equipmentDashboard button {
+.button {
     padding: 12px 25px;
     margin: 10px 5px;
     border: none;
-    border-radius: 5px;
-    background-color: #007BFF;
+    border-radius: 25px;
+    background-color: #FB5F21;
     color: white;
+    font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.equipmentDashboard button:hover {
-    background-color: #0056b3;
+.button.add, .button.edit, .button.delete {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-.equipmentDashboard ul {
-    list-style: none;
-    padding-left: 0;
+.button.add img, .button.edit img, .button.delete img {
+    width: 15px;
+    height: 15px;
 }
 
-.equipmentDashboard li {
+.button:hover {
+    background-color: #e94e1b;
+}
+
+.listing {
+    list-style-type: none;
+    padding: 0;
+}
+
+.listItem {
     padding: 15px;
     border: 1px solid #ccc;
     margin: 10px 0;
     border-radius: 5px;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.equipmentDashboard h2 {
-    font-size: 24px;
-    margin-top: 40px;
-    margin-bottom: 20px;
+.closeButton {
+    background-image: url('https://cdn.discordapp.com/attachments/1091506792900595863/1154297761726996540/close.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    border: none;
 }
 
-@media (max-width: 768px) {
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: #fff;
+    padding: 20px;
+    width: 70%;
+    max-width: 90%; 
+    border-radius: 5px;
+    position: relative;
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+.modalButton {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px 20px;
+    border-radius: 25px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+}
+
+.modalButton.apply {
+    background-color: #FB5F21;
+    color: white;
+}
+
+.modalButton.cancel {
+    background-color: #FFFFFF;
+    color: #FB5F21;
+    border: 1px solid #FB5F21;
+}
+
+@media screen and (max-width: 768px) {
     .equipmentDashboard {
-        padding: 10px;
+        margin: 1rem;
     }
 
-    .equipmentDashboard h1, .equipmentDashboard h2 {
+    h1, h2 {
         font-size: 22px;
     }
 
-    .equipmentDashboard input, .equipmentDashboard select, .equipmentDashboard button {
+    .inputField, .selectField, .button {
         width: 100%;
         margin-bottom: 10px;
     }
 
-    .equipmentDashboard ul {
-        padding: 0;
-    }
-
-    .equipmentDashboard li {
-        display: block;
-    }
-
-    .equipmentDashboard button {
-        display: block;
+    .modalContent {
         width: 100%;
-        margin: 10px auto;
+        height: 60%;
+        position: fixed;
+        bottom: 0;
+        border-radius: 10px 10px 0 0;
     }
 }

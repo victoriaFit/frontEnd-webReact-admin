@@ -8,6 +8,7 @@ function Equipments() {
     const [selectedEquipment, setSelectedEquipment] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
     const ITEMS_PER_PAGE = 4;
@@ -24,33 +25,37 @@ function Equipments() {
     }, []);
 
     const handleAddOrUpdateEquipment = async () => {
-        if (isEditing) {
-            const updatedEquipment = await EquipmentService.updateEquipment(selectedEquipment.id, selectedEquipment);
-            setEquipments(equipments.map(e => e.id === updatedEquipment.id ? updatedEquipment : e));
-            setIsEditing(false);
-        } else {
-            const newEquipment = await EquipmentService.addEquipment(selectedEquipment);
-            setEquipments([...equipments, newEquipment]);
-        }
-        setSelectedEquipment({});
-    };
+      try {
+          if (isEditing) {
+              const updatedEquipment = await EquipmentService.updateEquipment(selectedEquipment.id, selectedEquipment);
+              setEquipments(equipments.map(e => e.id === updatedEquipment.id ? updatedEquipment : e));
+              setIsEditing(false);
+          } else {
+              const newEquipment = await EquipmentService.addEquipment(selectedEquipment);
+              setEquipments([...equipments, newEquipment]);
+          }
+          setSelectedEquipment({});
+          setShowModal(false);
+      } catch (error) {
+          console.error("Erro ao atualizar ou adicionar equipamento:", error.response ? error.response.data : error.message);
+          alert('Erro ao atualizar ou adicionar equipamento. Veja o console para mais detalhes.');
+      }
+  };
+  
 
     const handleDeleteEquipment = async (id) => {
         try {
             await EquipmentService.deleteEquipment(id);
             setEquipments(equipments.filter(e => e.id !== id));
         } catch (error) {
-            if (error.message && error.message.includes('ProtectedError')) {
-                alert('Erro ao deletar equipamento: O equipamento está sendo referenciado por outra tabela (por exemplo, Assistance) e não pode ser deletado.');
-            } else {
-                alert('Erro ao deletar equipamento.');
-            }
+            alert('Erro ao deletar equipamento.');
         }
     };
   
     const handleEditEquipment = (equipment) => {
         setSelectedEquipment(equipment);
         setIsEditing(true);
+        setShowModal(true);
     };
 
     const handleInputChange = (e) => {
@@ -59,6 +64,16 @@ function Equipments() {
             ...prev,
             [name]: value
         }));
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+        setIsEditing(false);
+        setSelectedEquipment({});
+    };
+
+    const openModal = () => {
+        setShowModal(true);
     };
 
     const filteredEquipments = equipments.filter(equipment => 
@@ -82,76 +97,89 @@ function Equipments() {
     const uniqueBrands = [...new Set(equipments.map(equipment => equipment.brand))];
 
     return (
-        <div className="equipmentDashboard">
-            <h1>Dashboard de Equipamentos</h1>
-            {isLoading ? <div>Carregando...</div> : (
-                <>
-                    <div>
-                        <input 
-                            name="name"
-                            value={selectedEquipment.name || ''}
-                            onChange={handleInputChange}
-                            placeholder="Nome"
-                        />
-                        <input 
-                            name="model"
-                            value={selectedEquipment.model || ''}
-                            onChange={handleInputChange}
-                            placeholder="Modelo"
-                        />
-                        <select 
-                            name="brand"
-                            value={selectedEquipment.brand || ''}
-                            onChange={handleInputChange}
-                        >
-                            <option value="">Selecione uma marca</option>
-                            {uniqueBrands.map(brand => (
-                                <option key={brand} value={brand}>{brand}</option>
-                            ))}
-                        </select>
-                        <button onClick={handleAddOrUpdateEquipment}>
-                            {isEditing ? 'Atualizar' : 'Adicionar'}
-                        </button>
-                    </div>
+      <div className="equipmentDashboard">
+          <h1>Dashboard de Equipamentos</h1>
 
-                    <div>
-                        <input 
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Pesquisar equipamento..."
-                        />
-                    </div>
+          {isLoading ? <div>Carregando...</div> : (
+              <>
+                  <button className="button add" onClick={openModal}>
+                      <img src="https://cdn.discordapp.com/attachments/1091506792900595863/1154298014580617256/add-new.png" alt="Add New" />
+                      Adicionar Equipamento
+                  </button>
+                  <div>
+                      <input 
+                          className="inputField"
+                          value={search}
+                          onChange={(e) => setSearch(e.target.value)}
+                          placeholder="Pesquisar equipamento..."
+                      />
+                  </div>
 
-                    <ul>
-                        {paginatedEquipments.map(equipment => (
-                            <li key={equipment.id}>
-                                {equipment.name} - {equipment.model} - {equipment.brand}
-                                <button onClick={() => handleEditEquipment(equipment)}>Editar</button>
-                                <button onClick={() => handleDeleteEquipment(equipment.id)}>Deletar</button>
-                            </li>
-                        ))}
-                    </ul>
+                  <h2>Listagem de Equipamentos</h2>
+                  <ul className="listing">
+                      {paginatedEquipments.map(equipment => (
+                          <li className="listItem" key={equipment.id}>
+                              {equipment.name} - {equipment.model} - {equipment.brand}
+                              <button className="button edit" onClick={() => handleEditEquipment(equipment)}>
+                                  <img src="https://cdn.discordapp.com/attachments/1091506792900595863/1154298098043060225/edit.png" alt="Edit" />
+                              </button>
+                              <button className="button delete" onClick={() => handleDeleteEquipment(equipment.id)}>
+                                  <img src="https://cdn.discordapp.com/attachments/1091506792900595863/1154297902827577354/trash.png" alt="Delete" />
+                              </button>
+                          </li>
+                      ))}
+                  </ul>
 
-                    <div>
-                        <button onClick={() => setPage(prev => Math.max(prev - 1, 1))} disabled={page === 1}>Anterior</button>
-                        <button onClick={() => setPage(prev => prev + 1)} disabled={paginatedEquipments.length < ITEMS_PER_PAGE}>Próximo</button>
-                    </div>
+                  <div>
+                      <button className="button" onClick={() => setPage(prev => Math.max(prev - 1, 1))} disabled={page === 1}>Anterior</button>
+                      <button className="button" onClick={() => setPage(prev => prev + 1)} disabled={paginatedEquipments.length < ITEMS_PER_PAGE}>Próximo</button>
+                  </div>
 
-                    <div>
-                        <h2>Distribuição de Equipamentos por Marca</h2>
-                        <PieChart width={400} height={400}>
-                            <Pie dataKey="value" isAnimationActive={false} data={data} outerRadius={80} fill="#8884d8" label>
-                                {
-                                    data.map((entry, index) => <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042'][index % 4]}/>)
-                                }
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
-                    </div>
-                </>
-            )}
+                  {showModal && (
+    <div className="modal">
+        <div className="modalContent">
+            <h2 className="modalTitle">Editar Equipamento</h2>
+            <p className="modalDescription">Atualize as informações do equipamento abaixo:</p>
+            
+            <input 
+                className="inputField"
+                name="name"
+                value={selectedEquipment.name || ''}
+                onChange={handleInputChange}
+                placeholder="Nome"
+            />
+            <input 
+                className="inputField"
+                name="model"
+                value={selectedEquipment.model || ''}
+                onChange={handleInputChange}
+                placeholder="Modelo"
+            />
+            <select 
+                className="selectField"
+                name="brand"
+                value={selectedEquipment.brand || ''}
+                onChange={handleInputChange}
+            >
+                <option value="">Selecione uma marca</option>
+                {uniqueBrands.map(brand => (
+                    <option key={brand} value={brand}>{brand}</option>
+                ))}
+            </select>
+            
+            <button className="modalButton apply" onClick={handleAddOrUpdateEquipment}>
+                {isEditing ? 'Atualizar' : 'Adicionar'}
+            </button>
+            <button className="modalButton cancel" onClick={closeModal}>
+                Cancelar
+            </button>
         </div>
-    );
+    </div>
+)}
+              </>
+          )}
+      </div>
+  );
 }
 
 export default Equipments;
