@@ -1,0 +1,85 @@
+.equipmentDashboard {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.equipmentDashboard h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.equipmentDashboard input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.equipmentDashboard button {
+    padding: 10px 20px;
+    margin: 10px 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+}
+
+.equipmentDashboard button:hover {
+    background-color: #0056b3;
+}
+
+.equipmentDashboard ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.equipmentDashboard li {
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+.equipmentDashboard h2 {
+    font-size: 20px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.equipmentDashboard select {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .equipmentDashboard {
+        padding: 10px;
+    }
+
+    .equipmentDashboard h1, .equipmentDashboard h2 {
+        font-size: 18px;
+    }
+
+    .equipmentDashboard input, .equipmentDashboard select, .equipmentDashboard button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .equipmentDashboard ul {
+        padding: 0;
+    }
+
+    .equipmentDashboard li {
+        display: block;
+    }
+
+    .equipmentDashboard button {
+        display: block;
+        margin: 5px auto;
+    }
+}
